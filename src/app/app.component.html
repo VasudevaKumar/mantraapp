@@ -1,0 +1,220 @@
+<div class="container-fluid">
+  <div class="row" style="margin-top:15px;"></div>
+
+  <div class="row" *ngIf="displayList">
+    <div class="col-sm">
+      <div>
+        <mat-icon
+          (click)="openAddForm()"
+          style="cursor: pointer;"
+          title="Add details"
+          >add_circle</mat-icon
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:5px;"></div>
+
+  <div class="row">
+    <ng-template [ngIf]="displayList">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">User</th>
+              <th scope="col">Title</th>
+              <th scope="col">Body</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let item of collection.data | paginate: config;
+                let i = index
+              "
+            >
+              <th scope="row">{{ i + 1 }}</th>
+              <td class="inline-td">User-{{ item.userId }}</td>
+              <td>{{ item.title }}</td>
+              <td>{{ item.body }}</td>
+              <td class="inline-td">
+                <mat-icon
+                  (click)="getEditDetails(i)"
+                  style="cursor: pointer;"
+                  title="Update details"
+                  >edit</mat-icon
+                >&nbsp; | &nbsp;
+                <mat-icon
+                  (click)="removeDetails(i)"
+                  style="cursor: pointer;"
+                  title="Remove details"
+                  >delete_forever</mat-icon
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pagination-controls
+        (pageChange)="pageChanged($event)"
+      ></pagination-controls>
+    </ng-template>
+
+    <ng-template [ngIf]="addList">
+      <div class="col-md-12" style="padding: 10px;">
+        <div
+          class="col-md-5  "
+          style="margin-top:15px; background-color:gray; padding: 5px;"
+        >
+          Add details
+        </div>
+        <div class="col-md-7"></div>
+        <div class="col-md-12" style="margin-top: 10px;"></div>
+        <div class="col-md-5 nogutter">
+          <form class="form">
+            <mat-form-field style="width: 25%" floatLabel="never">
+              <mat-label>User ID</mat-label>
+              <select matNativeControl [(ngModel)]="getUserID" name="user">
+                <option value="1">User -1</option>
+                <option value="2">User -2</option>
+                <option value="3">User -3</option>
+              </select>
+            </mat-form-field>
+            <br />
+            <br />
+            <mat-form-field style="width: 100%" floatLabel="never">
+              <mat-label>Enter title</mat-label>
+              <input
+                matInput
+                [(ngModel)]="getTitle"
+                [value]="getTitle"
+                placeholder="Enter title"
+                name="title"
+              />
+            </mat-form-field>
+
+            <br />
+            <br />
+
+            <mat-form-field style="width: 100%" floatLabel="never">
+              <mat-label>Enter body</mat-label>
+              <textarea
+                matInput
+                placeholder="Ex. It makes me feel..."
+                [(ngModel)]="getBody"
+                [value]="getBody"
+                name="body"
+              ></textarea>
+            </mat-form-field>
+          </form>
+
+          <br />
+          <br />
+
+          <div class="example-button-row">
+            <button class="ripple" (click)="saveDetails()">Save</button>
+            <button
+              class="ripple"
+              style="margin-left: 5px;"
+              (click)="openListingDetails()"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <br />
+          <br />
+
+          <div
+            class="col-md-12 alert-danger"
+            style="padding: 10px;"
+            *ngIf="isFormValidate"
+          >
+            {{ isFormValidateMsg }}
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template [ngIf]="editList">
+      <div class="col-md-12" style="padding: 10px;">
+        <div
+          class="col-md-5"
+          style="margin-top:15px; background-color:gray; padding: 5px;"
+        >
+          Edit details
+        </div>
+        <div class="col-md-7"></div>
+        <div class="col-md-12" style="margin-top: 10px;"></div>
+
+        <div class="col-md-5 nogutter">
+          <form class="form">
+            <mat-form-field style="width: 25%" floatLabel="never">
+              <mat-label>User ID</mat-label>
+              <select matNativeControl [(ngModel)]="getUserID" name="user">
+                <option value="1">User -1</option>
+                <option value="2">User -2</option>
+                <option value="3">User -3</option>
+              </select>
+            </mat-form-field>
+            <br />
+            <br />
+
+            <mat-form-field style="width: 100%" floatLabel="never">
+              <mat-label>Enter title</mat-label>
+              <input
+                matInput
+                [(ngModel)]="getTitle"
+                [value]="getTitle"
+                placeholder="Enter title"
+                name="firstName"
+              />
+            </mat-form-field>
+
+            <br />
+            <br />
+
+            <mat-form-field style="width: 100%" floatLabel="never">
+              <mat-label>Enter body</mat-label>
+              <textarea
+                matInput
+                placeholder="Ex. It makes me feel..."
+                [(ngModel)]="getBody"
+                [value]="getBody"
+                name="address"
+              ></textarea>
+            </mat-form-field>
+          </form>
+
+          <br />
+          <br />
+
+          <div class="example-button-row">
+            <button class="ripple" (click)="updateDetails()">Update</button>
+            <button
+              class="ripple"
+              style="margin-left: 5px;"
+              (click)="openListingDetails()"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <br />
+          <br />
+
+          <div
+            class="col-md-12 alert-danger"
+            style="padding: 10px;"
+            *ngIf="isFormValidate"
+          >
+            {{ isFormValidateMsg }}
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
